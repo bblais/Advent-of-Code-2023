@@ -85,7 +85,7 @@
 #     
 #     What is the lowest location number that corresponds to any of the initial seed numbers?
 
-# In[2]:
+# In[1]:
 
 
 S="""
@@ -126,7 +126,7 @@ humidity-to-location map:
 lines=S.split("\n")
 
 
-# In[53]:
+# In[2]:
 
 
 class Map:
@@ -164,7 +164,7 @@ class Map:
         return self.source,src_index,self.destination,dst_index
 
 
-# In[54]:
+# In[3]:
 
 
 maps={}
@@ -189,33 +189,33 @@ print(seeds)
 print(maps)
 
 
-# In[55]:
+# In[4]:
 
 
 m=maps['seed']
 m
 
 
-# In[56]:
+# In[5]:
 
 
 m[300]
 
 
-# In[57]:
+# In[6]:
 
 
 m[99]
 
 
-# In[58]:
+# In[7]:
 
 
 for i in range(100):
     print(m[i])
 
 
-# In[59]:
+# In[8]:
 
 
 name,val='seed',79
@@ -231,13 +231,13 @@ while True:
         break
 
 
-# In[60]:
+# In[9]:
 
 
 dst_i
 
 
-# In[61]:
+# In[10]:
 
 
 def get_location(maps,seed=None,verbose=False):
@@ -258,25 +258,25 @@ def get_location(maps,seed=None,verbose=False):
     return dst_i
 
 
-# In[62]:
+# In[11]:
 
 
 get_location(maps,seed=79,verbose=True)
 
 
-# In[63]:
+# In[12]:
 
 
 [get_location(maps,seed=seed) for seed in seeds]
 
 
-# In[64]:
+# In[13]:
 
 
 min([get_location(maps,seed=seed) for seed in seeds])
 
 
-# In[71]:
+# In[14]:
 
 
 S=open('data/day5.txt').read().strip()
@@ -284,7 +284,7 @@ lines=S.split('\n')
 len(lines)
 
 
-# In[76]:
+# In[15]:
 
 
 maps={}
@@ -309,17 +309,190 @@ if m:
     
 
 
-# In[77]:
+# In[16]:
 
 
 seeds
 
 
-# In[78]:
+# In[17]:
 
 
 min([get_location(maps,seed=seed) for seed in seeds])
 
+
+# ## Part 2
+
+# In[18]:
+
+
+S="""
+seeds: 79 14 55 13
+
+seed-to-soil map:
+50 98 2
+52 50 48
+
+soil-to-fertilizer map:
+0 15 37
+37 52 2
+39 0 15
+
+fertilizer-to-water map:
+49 53 8
+0 11 42
+42 0 7
+57 7 4
+
+water-to-light map:
+88 18 7
+18 25 70
+
+light-to-temperature map:
+45 77 23
+81 45 19
+68 64 13
+
+temperature-to-humidity map:
+0 69 1
+1 0 69
+
+humidity-to-location map:
+60 56 37
+56 93 4
+"""
+lines=S.split("\n")
+
+
+# In[19]:
+
+
+maps={}
+m=None
+for line in lines:
+    if line.startswith('seeds:'):
+        seeds=[int(_) for _ in line.split(":")[1].split()]
+        continue
+
+    if line and line[0] not in '0123456789':
+        m=Map(line)
+        continue 
+        
+    if not line and m:
+        maps[m.source]=m
+        m=None
+    elif m:
+        m._add_range(line)
+        
+if m:
+    maps[m.source]=m
+    
+
+
+# In[20]:
+
+
+min([get_location(maps,seed=seed) for seed in seeds])
+
+
+# In[21]:
+
+
+old_seeds=seeds
+
+
+# In[22]:
+
+
+seeds
+
+
+# In[24]:
+
+
+seeds[1::2]
+
+
+# In[28]:
+
+
+min_val=1e500
+min_seed=None
+for start,length in zip(seeds[::2],seeds[1::2]):
+    for seed in range(start,start+length+1):
+        location=get_location(maps,seed=seed)
+        if location<min_val:
+            min_val=location
+            min_seed=seed
+
+min_seed,min_val
+
+
+# In[29]:
+
+
+get_location(maps,seed=min_seed,verbose=True)
+
+
+# In[30]:
+
+
+S=open('data/day5.txt').read().strip()
+lines=S.split('\n')
+len(lines)
+
+
+
+# In[31]:
+
+
+maps={}
+m=None
+for line in lines:
+    if line.startswith('seeds:'):
+        seeds=[int(_) for _ in line.split(":")[1].split()]
+        continue
+
+    if line and line[0] not in '0123456789':
+        m=Map(line)
+        continue 
+        
+    if not line and m:
+        maps[m.source]=m
+        m=None
+    elif m:
+        m._add_range(line)
+        
+if m:
+    maps[m.source]=m
+    
+
+
+# In[36]:
+
+
+from tqdm.notebook import tqdm
+
+
+# In[37]:
+
+
+min_val=1e500
+min_seed=None
+count=0
+for start,length in tqdm(zip(seeds[::2],seeds[1::2])):
+    for seed in tqdm(range(start,start+length+1)):
+        location=get_location(maps,seed=seed)
+        if location<min_val:
+            min_val=location
+            min_seed=seed
+
+        
+        count+=1
+min_seed,min_val
+
+
+# would need to find a faster way to do this.
 
 # In[ ]:
 
