@@ -65,7 +65,7 @@ hand_ranks={'five of a kind':7,
             'high card':1}
 
 
-# In[73]:
+# In[137]:
 
 
 def get_type(hand):
@@ -95,7 +95,7 @@ def get_type(hand):
     return 'high card'
 
 
-# In[74]:
+# In[138]:
 
 
 def value(hand):
@@ -166,10 +166,10 @@ for i,card in enumerate('J23456789TQKA'):
 card_vals
 
 
-# In[128]:
+# In[157]:
 
 
-def get_type(hand):
+def get_typeJ(hand):
     assert len(hand)==5
 
     s=set(hand)
@@ -192,6 +192,9 @@ def get_type(hand):
         raise
 
     assert sum(counts)==5
+
+    if counts[0]==5:
+        return 'five of a kind'
     
     if counts[0]==4:
         return 'four of a kind'
@@ -210,21 +213,21 @@ def get_type(hand):
 
     return 'high card'
 
-def value(hand):
+def valueJ(hand):
 
-    card_vals={}
+    card_valsJ={}
     for i,card in enumerate('J23456789TQKA'):
-        card_vals[card]=i+2
+        card_valsJ[card]=i+2
     
-    val=hand_ranks[get_type(hand)]
+    val=hand_ranks[get_typeJ(hand)]
 
     for i,c in enumerate(hand):
-        val+=card_vals[c]/14**(i+2)
+        val+=card_valsJ[c]/14**(i+2)
 
     return val
 
 
-# In[129]:
+# In[158]:
 
 
 S="""
@@ -240,14 +243,14 @@ bids=[int(_) for _ in bids]
 hands,bids
 
 
-# In[130]:
+# In[159]:
 
 
-vals2,bids2=zip(*sorted(zip([value(_) for _ in hands],bids)))
+vals2,bids2=zip(*sorted(zip([valueJ(_) for _ in hands],bids)))
 (bids2*arange(1,len(bids2)+1)).sum()
 
 
-# In[131]:
+# In[160]:
 
 
 S=open('data/day7.txt').read().strip()
@@ -255,7 +258,7 @@ lines=S.split('\n')
 len(lines)
 
 
-# In[132]:
+# In[161]:
 
 
 lines=S.strip().split("\n")
@@ -263,11 +266,31 @@ hands,bids=zip(*[_.split() for _ in lines])
 bids=[int(_) for _ in bids]
 
 
-# In[133]:
+# In[162]:
 
 
-vals2,bids2=zip(*sorted(zip([value(_) for _ in hands],bids)))
+vals2,bids2=zip(*sorted(zip([valueJ(_) for _ in hands],bids)))
 (bids2*arange(1,len(bids2)+1)).sum()
+
+
+# In[163]:
+
+
+Jhands=[_ for _ in hands if 'J' in _]
+len(Jhands)
+
+
+# In[156]:
+
+
+Jhands[:10]
+
+
+# In[148]:
+
+
+for hand in Jhands:
+    print(hand,"=",get_typeJ(hand))
 
 
 # In[ ]:
