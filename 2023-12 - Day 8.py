@@ -221,6 +221,33 @@ for key in data:
     plot(data[key],'o')
 
 
+# In[50]:
+
+
+for key in data:
+    data[key]=array(data[key])
+    print(data[key]/data[key][0])
+    
+
+
+# In[48]:
+
+
+data[1]/data[1][0]
+
+
+# In[51]:
+
+
+import math
+
+
+# In[54]:
+
+
+math.lcm(*[data[key][0] for key in data])
+
+
 # In[ ]:
 
 
