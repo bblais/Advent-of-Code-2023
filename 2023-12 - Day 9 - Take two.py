@@ -111,6 +111,127 @@ print(sum(vals))
 line
 
 
+# In[35]:
+
+
+S="10  13  16  21  30  45"
+lines=S.split('\n')
+seqs=[]
+for line in lines:
+    if not line:
+        continue
+    seq=array([int(_) for _ in line.split()])
+    seqs.append(seq)
+seqs
+
+
+# In[36]:
+
+
+seq
+
+
+# In[37]:
+
+
+seq_tower=[seq]
+while not all(seq_tower[-1]==0):
+    seq_tower.append(diff(seq_tower[-1]))
+
+val=cumsum([seq[-1] for seq in seq_tower][::-1])[-1]
+
+
+# In[41]:
+
+
+ss=[seq[0] for seq in seq_tower][::-1]
+ss
+
+
+# In[43]:
+
+
+vals=[0]
+for i in range(len(ss)-1):
+    vals.append(ss[i+1]-vals[-1])
+vals
+
+
+# In[44]:
+
+
+def predict_prev_val(seq):
+    seq_tower=[seq]
+    while not all(seq_tower[-1]==0):
+        seq_tower.append(diff(seq_tower[-1]))
+
+    ss=[seq[0] for seq in seq_tower][::-1]
+    vals=[0]
+    for i in range(len(ss)-1):
+        vals.append(ss[i+1]-vals[-1])
+    val=vals[-1]    
+    return val    
+
+
+# In[45]:
+
+
+predict_prev_val(seq)
+
+
+# In[46]:
+
+
+S="""
+0 3 6 9 12 15
+1 3 6 10 15 21
+10 13 16 21 30 45
+""".strip()
+lines=S.split('\n')
+seqs=[]
+for line in lines:
+    if not line:
+        continue
+    seq=array([int(_) for _ in line.split()])
+    seqs.append(seq)
+seqs
+
+
+# In[47]:
+
+
+vals=[]
+for i,seq in enumerate(seqs):
+    vals.append(predict_prev_val(seq))
+print(sum(vals))
+    
+
+
+# In[48]:
+
+
+S=open('data/day9.txt').read()
+lines=S.split('\n')
+print(len(lines))
+seqs=[]
+for line in lines:
+    if not line:
+        continue
+    
+    seq=array([int(_) for _ in line.split()])
+    seqs.append(seq)
+
+
+# In[49]:
+
+
+vals=[]
+for i,seq in enumerate(seqs):
+    vals.append(predict_prev_val(seq))
+print(sum(vals))
+    
+
+
 # In[ ]:
 
 
